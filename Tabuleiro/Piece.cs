@@ -13,9 +13,9 @@ namespace Tabuleiro
 
         }
 
-        public Piece(Position position, Color color, Tabletop tab)
+        public Piece(Color color, Tabletop tab)
         {
-            Position = position;
+            Position = null;
             Color = color;
             Tab = tab;
             QtMoviments = 0;

@@ -19,9 +19,15 @@ namespace Tabuleiro
             Pieces = new Piece[row, column];
         }
 
-        public Piece piece(int row, int column)
+        public Piece Piece(int row, int column)
         {
             return Pieces[row, column];
+        }
+
+        public void PutPiece(Piece p, Position pos)
+        {
+            Pieces[pos.Row, pos.Column] = p;
+            p.Position = pos;
         }
     }
 }

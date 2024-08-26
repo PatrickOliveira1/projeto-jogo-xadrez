@@ -10,13 +10,13 @@ namespace projeto_jogo_xadrez
             {
                 for (int j = 0; j < tab.Column; j++)
                 {
-                    if (tab.piece(i, j) == null)
+                    if (tab.Piece(i, j) == null)
                     {
                         Console.Write("- ");
                     }
                     else
                     {
-                        Console.Write(tab.piece(i, j) + " ");
+                        Console.Write(tab.Piece(i, j) + " ");
                     }
 
                 }
