@@ -5,15 +5,23 @@ using Xadrez;
 
 try
 {
-    Tabletop tab = new Tabletop(8, 8);
+    ChessMatch match = new ChessMatch();
 
-    tab.PutPiece(new Torre(Color.Black, tab), new Position(0, 0));
-    tab.PutPiece(new Torre(Color.Black, tab), new Position(1, 3));
-    tab.PutPiece(new Rei(Color.Black, tab), new Position(0, 2));
+    while(!match.Finished)
+    {
+        Console.Clear();
+        Screen.printTabletop(match.Tab);
 
-    tab.PutPiece(new Torre(Color.White, tab), new Position(3, 5));
+        Console.WriteLine();
+        Console.Write("Origem: ");
+        Position origin = Screen.ReadPositionChess().toPosition();
+        Console.Write("Destino: ");
+        Position destiny = Screen.ReadPositionChess().toPosition();
 
-    Screen.printTabletop(tab);
+        match.ExecMoviment(origin, destiny);
+    }
+
+    Screen.printTabletop(match.Tab);
 }
 catch(TabletopException e)
 {

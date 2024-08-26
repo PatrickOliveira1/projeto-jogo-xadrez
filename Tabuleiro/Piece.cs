@@ -20,5 +20,10 @@ namespace Tabuleiro
             Tab = tab;
             QtMoviments = 0;
         }
+
+        public void IncrementQtMoviments()
+        {
+            QtMoviments++;
+        }
     }
 }
