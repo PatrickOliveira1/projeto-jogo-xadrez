@@ -1,7 +1,7 @@
 ﻿
 namespace Tabuleiro
 {
-    internal class Piece
+    abstract class Piece
     {
         public Position Position { get; set; }
         public Color Color { get; protected set; }
@@ -25,5 +25,7 @@ namespace Tabuleiro
         {
             QtMoviments++;
         }
+
+        public abstract bool[,] PossibleMoviments();
     }
 }
