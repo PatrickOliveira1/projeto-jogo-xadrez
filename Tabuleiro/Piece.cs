@@ -26,6 +26,27 @@ namespace Tabuleiro
             QtMoviments++;
         }
 
+        public bool HasPossibleMoviments()
+        {
+            bool[,] mat = PossibleMoviments();
+
+            for (int i = 0; i < Tab.Row; i++)
+            {
+                for (int j = 0; j < Tab.Column; j++)
+                {
+                    if (mat[i, j])
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public bool CanMoveFor(Position pos)
+        {
+            return PossibleMoviments()[pos.Row, pos.Column];
+        }
         public abstract bool[,] PossibleMoviments();
     }
 }

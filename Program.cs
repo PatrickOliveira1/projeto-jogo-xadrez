@@ -9,23 +9,37 @@ try
 
     while(!match.Finished)
     {
-        Console.Clear();
-        Screen.printTabletop(match.Tab);
 
-        Console.WriteLine();
-        Console.Write("Origem: ");
-        Position origin = Screen.ReadPositionChess().toPosition();
+        try
+        {
+            Console.Clear();
+            Screen.printTabletop(match.Tab);
+            Console.WriteLine();
+            Console.WriteLine("Turno: " + match.Turn);
+            Console.WriteLine("Aguardando jogada: " + match.CurrentPlayer);
 
-        bool[,] possiblePositions = match.Tab.Piece(origin).PossibleMoviments();
+            Console.WriteLine();
+            Console.Write("Origem: ");
+            Position origin = Screen.ReadPositionChess().toPosition();
+            match.ValidOriginPosition(origin);
 
-        Console.Clear();
-        Screen.printTabletop(match.Tab, possiblePositions);
+            bool[,] possiblePositions = match.Tab.Piece(origin).PossibleMoviments();
 
-        Console.WriteLine();
-        Console.Write("Destino: ");
-        Position destiny = Screen.ReadPositionChess().toPosition();
+            Console.Clear();
+            Screen.printTabletop(match.Tab, possiblePositions);
 
-        match.ExecMoviment(origin, destiny);
+            Console.WriteLine();
+            Console.Write("Destino: ");
+            Position destiny = Screen.ReadPositionChess().toPosition();
+            match.ValidDestinyPosition(origin, destiny);
+
+            match.MakePlay(origin, destiny);
+        }
+        catch (TabletopException e)
+        {
+            Console.WriteLine("Erro: " + e.Message);
+            Console.ReadLine();
+        }
     }
 
     Screen.printTabletop(match.Tab);
