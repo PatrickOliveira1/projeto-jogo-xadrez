@@ -13,10 +13,7 @@ try
         try
         {
             Console.Clear();
-            Screen.printTabletop(match.Tab);
-            Console.WriteLine();
-            Console.WriteLine("Turno: " + match.Turn);
-            Console.WriteLine("Aguardando jogada: " + match.CurrentPlayer);
+            Screen.PrintMatch(match);
 
             Console.WriteLine();
             Console.Write("Origem: ");
@@ -26,7 +23,7 @@ try
             bool[,] possiblePositions = match.Tab.Piece(origin).PossibleMoviments();
 
             Console.Clear();
-            Screen.printTabletop(match.Tab, possiblePositions);
+            Screen.PrintTabletop(match.Tab, possiblePositions);
 
             Console.WriteLine();
             Console.Write("Destino: ");
@@ -42,7 +39,7 @@ try
         }
     }
 
-    Screen.printTabletop(match.Tab);
+    Screen.PrintTabletop(match.Tab);
 }
 catch(TabletopException e)
 {
