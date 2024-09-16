@@ -1,4 +1,6 @@
 ﻿
+using Xadrez;
+
 namespace Tabuleiro
 {
     internal class Tabletop

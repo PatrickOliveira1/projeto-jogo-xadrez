@@ -39,11 +39,12 @@ try
         }
     }
 
-    Screen.PrintTabletop(match.Tab);
+    Console.Clear();
+    Screen.PrintMatch(match);
 }
 catch(TabletopException e)
 {
     Console.WriteLine(e.Message);
 }
 
-Console.WriteLine();
+Console.ReadLine();

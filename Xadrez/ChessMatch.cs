@@ -68,9 +68,15 @@ namespace Xadrez
             {
                 Check = false;
             }
-
-            Turn++;
-            ChangePlayer();
+            if (TestCheckmate(Enemy(CurrentPlayer)))
+            {
+                Finished = true;
+            }
+            else
+            {
+                Turn++;
+                ChangePlayer();
+            }
         }
 
         public void ValidOriginPosition(Position pos)
@@ -164,6 +170,37 @@ namespace Xadrez
                 }
             }
             return false;
+        }
+
+        public bool TestCheckmate(Color color)
+        {
+            if (!IsInCheck(color))
+            {
+                return false;
+            }
+            foreach (Piece piece in InGamePieces(color))
+            {
+                bool[,] mat = piece.PossibleMoviments();
+                for (int i = 0; i < Tab.Row; i++)
+                {
+                    for (int j = 0; j < Tab.Column; j++)
+                    {
+                        if (mat[i,j])
+                        {
+                            Position origin = piece.Position;
+                            Position destiny = new Position(i, j);
+                            Piece catchedPiece = ExecMoviment(origin, destiny);
+                            bool testCheck = IsInCheck(color);
+                            UndoMoviment(origin, destiny, catchedPiece);
+                            if (!testCheck)
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+            return true;
         }
 
         private Color Enemy(Color color)
