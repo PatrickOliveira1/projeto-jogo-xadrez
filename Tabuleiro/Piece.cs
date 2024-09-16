@@ -25,6 +25,10 @@ namespace Tabuleiro
         {
             QtMoviments++;
         }
+        public void DecrementQtMoviments()
+        {
+            QtMoviments--;
+        }
 
         public bool HasPossibleMoviments()
         {
