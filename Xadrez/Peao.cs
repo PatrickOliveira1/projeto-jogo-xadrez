@@ -4,14 +4,15 @@ namespace Xadrez
 {
     internal class Peao : Piece
     {
+        private ChessMatch Match;
 
         public Peao()
         {
 
         }
-        public Peao(Color cor, Tabletop tab) : base(cor, tab)
+        public Peao(Color cor, Tabletop tab, ChessMatch match) : base(cor, tab)
         {
-
+            Match = match;
         }
 
         private bool ExistEnemy(Position pos)
@@ -53,6 +54,21 @@ namespace Xadrez
                 {
                     mat[pos.Row, pos.Column] = true;
                 }
+
+                // #jogadaespecial EnPassant
+                if(Position.Row == 3)
+                {
+                    Position left = new Position(Position.Row, Position.Column - 1);
+                    if (Tab.ValidPosition(left) && ExistEnemy(left) && Tab.Piece(left) == Match.VulnerableEnPassant) 
+                    {
+                        mat[left.Row - 1, left.Column] = true;
+                    }
+                    Position right = new Position(Position.Row, Position.Column + 1);
+                    if (Tab.ValidPosition(right) && ExistEnemy(right) && Tab.Piece(right) == Match.VulnerableEnPassant)
+                    {
+                        mat[right.Row - 1, right.Column] = true;
+                    }
+                }
             }
             else
             {
@@ -75,6 +91,21 @@ namespace Xadrez
                 if (Tab.ValidPosition(pos) && ExistEnemy(pos))
                 {
                     mat[pos.Row, pos.Column] = true;
+                }
+
+                // #jogadaespecial EnPassant
+                if (Position.Row == 4)
+                {
+                    Position left = new Position(Position.Row, Position.Column - 1);
+                    if (Tab.ValidPosition(left) && ExistEnemy(left) && Tab.Piece(left) == Match.VulnerableEnPassant)
+                    {
+                        mat[left.Row + 1, left.Column] = true;
+                    }
+                    Position right = new Position(Position.Row, Position.Column + 1);
+                    if (Tab.ValidPosition(right) && ExistEnemy(right) && Tab.Piece(right) == Match.VulnerableEnPassant)
+                    {
+                        mat[right.Row + 1, right.Column] = true;
+                    }
                 }
             }
 

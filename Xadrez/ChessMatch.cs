@@ -12,6 +12,7 @@ namespace Xadrez
         private HashSet<Piece> Pieces { get; set; }
         private HashSet<Piece> CapturedPieces { get; set; }
         public bool Check { get; private set; }
+        public Piece VulnerableEnPassant { get; private set; }
 
         public ChessMatch()
         {
@@ -20,6 +21,7 @@ namespace Xadrez
             CurrentPlayer = Color.White;
             Finished = false;
             Check = false;
+            VulnerableEnPassant = null;
             Pieces = new HashSet<Piece>();
             CapturedPieces = new HashSet<Piece>();
             PutPieces();
@@ -60,6 +62,25 @@ namespace Xadrez
 
             }
 
+            // #jogadaespecial EnPassant
+            if (piece is Peao)
+            {
+                if (origin.Column != destiny.Column && catchedPiece == null)
+                {
+                    Position posP;
+                    if (piece.Color == Color.White)
+                    {
+                        posP = new Position(destiny.Row + 1, destiny.Column);
+                    }
+                    else
+                    {
+                        posP = new Position(destiny.Row - 1, destiny.Column);
+                    }
+                    catchedPiece = Tab.RemovePiece(posP);
+                    CapturedPieces.Add(catchedPiece);
+                }
+            }
+
             return catchedPiece;
         }
 
@@ -96,6 +117,25 @@ namespace Xadrez
                 Tab.PutPiece(T, originT);
 
             }
+
+            // #jogadaespecial EnPassant
+            if (piece is Peao)
+            {
+                if (origin.Column != destiny.Column && catchedPiece == VulnerableEnPassant)
+                {
+                    Piece peao = Tab.RemovePiece(destiny);
+                    Position posP;
+                    if (piece.Color == Color.White)
+                    {
+                        posP = new Position(3, destiny.Column);
+                    }
+                    else
+                    {
+                        posP = new Position(4, destiny.Column);
+                    }
+                    Tab.PutPiece(peao, posP);
+                }
+            }
         }
 
         public void MakePlay(Position origin, Position destiny)
@@ -106,6 +146,21 @@ namespace Xadrez
             {
                 UndoMoviment(origin, destiny, catchedPiece);
                 throw new TabletopException("Você não pode se colocar em cheque!");
+            }
+
+            Piece piece = Tab.Piece(destiny);
+
+            // #jogadaespecial promoção
+            if (piece is Peao)
+            {
+                if ((piece.Color == Color.White && destiny.Row == 0) || (piece.Color == Color.Black && destiny.Row == 7))
+                {
+                    piece = Tab.RemovePiece(destiny);
+                    Pieces.Remove(piece);
+                    Piece dama = new Dama(piece.Color, Tab);
+                    Tab.PutPiece(dama, destiny);
+                    Pieces.Add(dama);
+                }
             }
 
             if (IsInCheck(Enemy(CurrentPlayer)))
@@ -124,6 +179,16 @@ namespace Xadrez
             {
                 Turn++;
                 ChangePlayer();
+            }
+
+            // #jogadaespecial EnPassant
+            if (piece is Peao && (destiny.Row == origin.Row - 2 || destiny.Row == origin.Row + 2))
+            {
+                VulnerableEnPassant = piece;
+            }
+            else
+            {
+                VulnerableEnPassant = null;
             }
         }
 
@@ -279,14 +344,14 @@ namespace Xadrez
             PutNewPiece('f', 1, new Bispo(Color.White, Tab));
             PutNewPiece('g', 1, new Cavalo(Color.White, Tab));
             PutNewPiece('h', 1, new Torre(Color.White, Tab));
-            PutNewPiece('a', 2, new Peao(Color.White, Tab));
-            PutNewPiece('b', 2, new Peao(Color.White, Tab));
-            PutNewPiece('c', 2, new Peao(Color.White, Tab));
-            PutNewPiece('d', 2, new Peao(Color.White, Tab));
-            PutNewPiece('e', 2, new Peao(Color.White, Tab));
-            PutNewPiece('f', 2, new Peao(Color.White, Tab));
-            PutNewPiece('g', 2, new Peao(Color.White, Tab));
-            PutNewPiece('h', 2, new Peao(Color.White, Tab));
+            PutNewPiece('a', 2, new Peao(Color.White, Tab, this));
+            PutNewPiece('b', 2, new Peao(Color.White, Tab, this));
+            PutNewPiece('c', 2, new Peao(Color.White, Tab, this));
+            PutNewPiece('d', 2, new Peao(Color.White, Tab, this));
+            PutNewPiece('e', 2, new Peao(Color.White, Tab, this));
+            PutNewPiece('f', 2, new Peao(Color.White, Tab, this));
+            PutNewPiece('g', 2, new Peao(Color.White, Tab, this));
+            PutNewPiece('h', 2, new Peao(Color.White, Tab, this));
 
             PutNewPiece('a', 8, new Torre(Color.Black, Tab));
             PutNewPiece('b', 8, new Cavalo(Color.Black, Tab));
@@ -296,14 +361,14 @@ namespace Xadrez
             PutNewPiece('f', 8, new Bispo(Color.Black, Tab));
             PutNewPiece('g', 8, new Cavalo(Color.Black, Tab));
             PutNewPiece('h', 8, new Torre(Color.Black, Tab));
-            PutNewPiece('a', 7, new Peao(Color.Black, Tab));
-            PutNewPiece('b', 7, new Peao(Color.Black, Tab));
-            PutNewPiece('c', 7, new Peao(Color.Black, Tab));
-            PutNewPiece('d', 7, new Peao(Color.Black, Tab));
-            PutNewPiece('e', 7, new Peao(Color.Black, Tab));
-            PutNewPiece('f', 7, new Peao(Color.Black, Tab));
-            PutNewPiece('g', 7, new Peao(Color.Black, Tab));
-            PutNewPiece('h', 7, new Peao(Color.Black, Tab));
+            PutNewPiece('a', 7, new Peao(Color.Black, Tab, this));
+            PutNewPiece('b', 7, new Peao(Color.Black, Tab, this));
+            PutNewPiece('c', 7, new Peao(Color.Black, Tab, this));
+            PutNewPiece('d', 7, new Peao(Color.Black, Tab, this));
+            PutNewPiece('e', 7, new Peao(Color.Black, Tab, this));
+            PutNewPiece('f', 7, new Peao(Color.Black, Tab, this));
+            PutNewPiece('g', 7, new Peao(Color.Black, Tab, this));
+            PutNewPiece('h', 7, new Peao(Color.Black, Tab, this));
         }
     }
 }
