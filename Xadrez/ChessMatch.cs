@@ -27,14 +27,39 @@ namespace Xadrez
 
         public Piece ExecMoviment(Position origin, Position destiny)
         {
-            Piece p = Tab.RemovePiece(origin);
-            p.IncrementQtMoviments();
+            Piece piece = Tab.RemovePiece(origin);
+            piece.IncrementQtMoviments();
             Piece catchedPiece = Tab.RemovePiece(destiny);
-            Tab.PutPiece(p, destiny);
+            Tab.PutPiece(piece, destiny);
             if (catchedPiece != null)
             {
                 CapturedPieces.Add(catchedPiece);
             }
+
+            // #jogadaespecial roque pequeno
+
+            if (piece is Rei && destiny.Column == origin.Column + 2)
+            {
+                Position originT = new Position(origin.Row, origin.Column + 3);
+                Position destinyT = new Position(origin.Row, origin.Column + 1);
+                Piece T = Tab.RemovePiece(originT);
+                T.IncrementQtMoviments();
+                Tab.PutPiece(T, destinyT);
+
+            }
+
+            // #jogadaespecial roque grande
+
+            if (piece is Rei && destiny.Column == origin.Column - 2)
+            {
+                Position originT = new Position(origin.Row, origin.Column - 4);
+                Position destinyT = new Position(origin.Row, origin.Column - 1);
+                Piece T = Tab.RemovePiece(originT);
+                T.IncrementQtMoviments();
+                Tab.PutPiece(T, destinyT);
+
+            }
+
             return catchedPiece;
         }
 
@@ -48,6 +73,29 @@ namespace Xadrez
                 CapturedPieces.Remove(catchedPiece);
             }
             Tab.PutPiece(piece, origin);
+
+            // #jogadaespecial roque pequeno
+
+            if (piece is Rei && destiny.Column == origin.Column + 2)
+            {
+                Position originT = new Position(origin.Row, origin.Column + 3);
+                Position destinyT = new Position(origin.Row, origin.Column + 1);
+                Piece T = Tab.RemovePiece(destinyT);
+                T.DecrementQtMoviments();
+                Tab.PutPiece(T, originT);
+            }
+
+            // #jogadaespecial roque pequeno
+
+            if (piece is Rei && destiny.Column == origin.Column - 2)
+            {
+                Position originT = new Position(origin.Row, origin.Column - 4);
+                Position destinyT = new Position(origin.Row, origin.Column - 1);
+                Piece T = Tab.RemovePiece(destinyT);
+                T.DecrementQtMoviments();
+                Tab.PutPiece(T, originT);
+
+            }
         }
 
         public void MakePlay(Position origin, Position destiny)
@@ -227,7 +275,7 @@ namespace Xadrez
             PutNewPiece('b', 1, new Cavalo(Color.White, Tab));
             PutNewPiece('c', 1, new Bispo(Color.White, Tab));
             PutNewPiece('d', 1, new Dama(Color.White, Tab));
-            PutNewPiece('e', 1, new Rei(Color.White, Tab));
+            PutNewPiece('e', 1, new Rei(Color.White, Tab, this));
             PutNewPiece('f', 1, new Bispo(Color.White, Tab));
             PutNewPiece('g', 1, new Cavalo(Color.White, Tab));
             PutNewPiece('h', 1, new Torre(Color.White, Tab));
@@ -244,7 +292,7 @@ namespace Xadrez
             PutNewPiece('b', 8, new Cavalo(Color.Black, Tab));
             PutNewPiece('c', 8, new Bispo(Color.Black, Tab));
             PutNewPiece('d', 8, new Dama(Color.Black, Tab));
-            PutNewPiece('e', 8, new Rei(Color.Black, Tab));
+            PutNewPiece('e', 8, new Rei(Color.Black, Tab, this));
             PutNewPiece('f', 8, new Bispo(Color.Black, Tab));
             PutNewPiece('g', 8, new Cavalo(Color.Black, Tab));
             PutNewPiece('h', 8, new Torre(Color.Black, Tab));
